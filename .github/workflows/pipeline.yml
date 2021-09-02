@@ -22,7 +22,7 @@ jobs:
         run: echo "$COMMITS"
       - name: commit messages
         env:
-          COMMIT_MESSAGES: ${{ !contains(join(toJson(github.event.commits.*.message)), '#SKIP' }}
+          COMMIT_MESSAGES: ${{ !contains(join(toJson(github.event.commits.*.message)), '#SKIP') }}
         run: echo "$COMMIT_MESSAGES"
   simple_deployment_pipeline:
     runs-on: ubuntu-18.04
