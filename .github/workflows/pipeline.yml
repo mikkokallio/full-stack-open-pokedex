@@ -8,22 +8,6 @@ on:
     branches: [master]
     types: [opened, synchronize]
 jobs:
-  a_test_job:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: gihub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: commits
-        env:
-          COMMITS: ${{ toJson(github.event.commits) }}
-        run: echo "$COMMITS"
-      - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ !contains(join(toJson(github.event.commits.*.message)), '#SKIP') }}
-        run: echo "$COMMIT_MESSAGES"
   simple_deployment_pipeline:
     runs-on: ubuntu-18.04
     steps:
@@ -45,7 +29,7 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5000
-      - if: ${{ github.event_name == 'push' }}      
+      - if: ${{ github.event_name == 'push' }} && ${{ !contains(join(toJson(github.event.commits.*.message)), '#SKIP') }}
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
@@ -55,7 +39,7 @@ jobs:
           checkstring: "ok"
           rollbackonhealthcheckfailed: true
       - uses: actions/checkout@v2
-      - if: ${{ github.event_name == 'push' }} && "!contains(github.event.head_commit.message, '#SKIP')"
+      - if: ${{ github.event_name == 'push' }} && ${{ !contains(join(toJson(github.event.commits.*.message)), '#SKIP') }}
         name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.33.0
         env:
