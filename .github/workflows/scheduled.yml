@@ -1,0 +1,19 @@
+#on:
+#  schedule:
+#    - cron:  '30 * * * *'
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Check the deployed service URL
+      uses: jtalk/url-health-check-action@v1.5
+      with:
+        url: https://cicadianapp.herokuapp.com/health
+        max-attempts: 3
+        retry-delay: 5s
+        retry-all: no
