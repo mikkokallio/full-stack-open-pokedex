@@ -1,7 +1,7 @@
 name: Scheduled health check
 on:
   schedule:
-    - cron:  '57 * * * *'
+    - cron:  '0 10 * * *'
 
 jobs:
   simple_deployment_pipeline:
